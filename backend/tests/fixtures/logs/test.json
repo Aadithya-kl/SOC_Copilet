@@ -1,0 +1,2 @@
+{"timestamp": "2023-10-11T22:14:15Z", "provider": "auth", "action": "login_failed", "src_ip": "10.0.0.5", "username": "admin", "hostname": "web-server-01"}
+{"timestamp": "2023-10-11T22:15:00Z", "provider": "nginx", "action": "access", "src_ip": "192.168.1.100", "url": "http://malicious-domain.com/payload.sh"}

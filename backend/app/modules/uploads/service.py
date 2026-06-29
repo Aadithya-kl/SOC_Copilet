@@ -59,11 +59,13 @@ class UploadsService:
         # Create DB Record
         file_record = FileRecord(
             incident_id=incident_id,
-            filename=filename,
-            storage_path=storage_path,
-            content_type=content_type,
-            size_bytes=size_bytes,
-            hash_sha256=file_hash
+            organization_id=organization_id,
+            original_filename=filename,
+            stored_path=storage_path,
+            mime_type=content_type,
+            file_size_bytes=size_bytes,
+            sha256_hash=file_hash,
+            uploaded_by=user_id
         )
         self.session.add(file_record)
         

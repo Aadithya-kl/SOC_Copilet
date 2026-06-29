@@ -8,6 +8,7 @@ from app.modules.health.router import router as health_router
 from app.modules.auth.router import router as auth_router
 from app.modules.incidents.router import router as incidents_router
 from app.modules.uploads.router import router as uploads_router
+from app.modules.investigation.router import router as investigations_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -35,4 +36,5 @@ app.include_router(health_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(incidents_router, prefix="/api/v1")
 app.include_router(uploads_router, prefix="/api/v1")
+app.include_router(investigations_router, prefix="/api/v1")
 

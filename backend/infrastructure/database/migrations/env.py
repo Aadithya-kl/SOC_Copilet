@@ -8,6 +8,15 @@ from alembic import context
 from app.models.base import Base
 
 # Import models to ensure they are registered with Base.metadata
+from app.models.organization import Organization  # noqa: F401
+from app.models.user import User  # noqa: F401
+from app.models.incident import Incident  # noqa: F401
+from app.models.file_record import FileRecord  # noqa: F401
+from app.models.refresh_token import RefreshToken  # noqa: F401
+from app.models.audit_log import AuditLog  # noqa: F401
+from app.models.investigation import InvestigationState  # noqa: F401
+from app.models.normalized_event import NormalizedEvent  # noqa: F401
+from app.models.ioc import IOC  # noqa: F401
 
 from app.core.config import settings
 

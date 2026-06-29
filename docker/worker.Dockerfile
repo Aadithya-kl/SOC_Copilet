@@ -30,4 +30,4 @@ COPY backend/ ./
 RUN useradd -m -u 1000 soc_copilot
 USER 1000
 
-CMD ["python", "-m", "app.agents.worker"]
+CMD ["arq", "app.worker.WorkerSettings"]
