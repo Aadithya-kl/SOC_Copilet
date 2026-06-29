@@ -7,10 +7,6 @@ from alembic import context
 # Import your models Base
 from app.models.base import Base
 # Import models to ensure they are registered with Base.metadata
-from app.models.organization import Organization
-from app.models.user import User
-from app.models.incident import Incident
-from app.models.file_record import FileRecord
 
 from app.core.config import settings
 
@@ -42,6 +38,8 @@ def do_run_migrations(connection) -> None:
 
 async def run_async_migrations() -> None:
     configuration = config.get_section(config.config_ini_section)
+    if configuration is None:
+        configuration = {}
     configuration["sqlalchemy.url"] = str(settings.DATABASE_URL)
     connectable = async_engine_from_config(
         configuration,

@@ -1,0 +1,6 @@
+* @soc_copilot/maintainers
+/backend/app/core/ @soc_copilot/platform
+/backend/app/agents/ @soc_copilot/ai
+/backend/app/llm/ @soc_copilot/ai
+/backend/infrastructure/ @soc_copilot/devops
+/docs/ @soc_copilot/docs

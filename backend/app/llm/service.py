@@ -1,4 +1,3 @@
-from typing import Any
 import structlog
 from app.llm.schemas import LLMRequest, LLMResponse
 from app.llm.providers.base import LLMProvider

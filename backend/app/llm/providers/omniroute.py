@@ -1,6 +1,5 @@
 import time
 import httpx
-from typing import Any
 from app.llm.providers.base import LLMProvider
 from app.llm.schemas import LLMRequest, LLMResponse, ProviderHealth
 from app.core.exceptions import LLMUnavailableError

@@ -49,7 +49,7 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
                     "timestamp": datetime.utcnow().isoformat() + "Z"
                 }
             )
-        except Exception as e:
+        except Exception:
             duration_ms = int((time.time() - start_time) * 1000)
             logger.exception("request.unhandled_exception", 
                              method=request.method, 

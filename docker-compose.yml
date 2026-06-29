@@ -10,7 +10,8 @@ services:
     environment:
       - APP_ENV=production
     env_file:
-      - .env
+      - path: .env
+        required: false
     depends_on:
       - postgres
       - redis
@@ -26,7 +27,8 @@ services:
     environment:
       - APP_ENV=production
     env_file:
-      - .env
+      - path: .env
+        required: false
     depends_on:
       - backend
       - postgres

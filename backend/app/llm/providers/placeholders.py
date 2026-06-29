@@ -1,7 +1,6 @@
 from app.llm.providers.base import LLMProvider
 from app.llm.schemas import LLMRequest, LLMResponse, ProviderHealth
 import structlog
-from app.core.exceptions import LLMUnavailableError
 
 logger = structlog.get_logger(__name__)
 
