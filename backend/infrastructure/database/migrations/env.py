@@ -6,6 +6,7 @@ from alembic import context
 
 # Import your models Base
 from app.models.base import Base
+
 # Import models to ensure they are registered with Base.metadata
 
 from app.core.config import settings

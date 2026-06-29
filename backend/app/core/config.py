@@ -4,6 +4,10 @@ from pydantic import PostgresDsn, HttpUrl
 from pathlib import Path
 
 class Settings(BaseSettings):
+    # JWT
+    JWT_SECRET_KEY: str = "super_secret_temporary_key_change_in_production"
+    JWT_ALGORITHM: str = "HS256"
+
     # App
     APP_ENV: Literal["development", "staging", "production"] = "development"
     SECRET_KEY: str = "supersecretkey_for_development_only" # Provide default for dev
@@ -11,6 +15,16 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: PostgresDsn = "postgresql+asyncpg://postgres:postgres@localhost:5432/soc_copilot" # type: ignore
     DATABASE_POOL_SIZE: int = 10
+    
+    # External APIs
+    QDRANT_URL: str = "http://qdrant:6333"
+    
+    # MinIO
+    MINIO_HOST: str = "minio"
+    MINIO_PORT: str = "9000"
+    MINIO_ROOT_USER: str = "soc_admin"
+    MINIO_ROOT_PASSWORD: str = "soc_admin_password"
+    MINIO_SECURE: bool = False
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
