@@ -1,5 +1,5 @@
 # Build Stage
-FROM python:3.12.3-slim AS builder
+FROM python:3.14.6-slim AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -19,7 +19,7 @@ COPY backend/pyproject.toml backend/poetry.lock* ./
 RUN poetry install --only main --no-root
 
 # Run Stage
-FROM python:3.12.3-slim
+FROM python:3.14.6-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
