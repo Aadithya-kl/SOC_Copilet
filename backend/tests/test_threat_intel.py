@@ -1,6 +1,5 @@
 import pytest
 import respx
-import httpx
 from httpx import Response
 from app.modules.threat_intel.providers.virustotal import VirusTotalProvider
 from app.modules.threat_intel.providers.phishtank import PhishTankProvider

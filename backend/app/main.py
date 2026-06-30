@@ -43,11 +43,11 @@ app = FastAPI(
 # Exception Handlers
 setup_exception_handlers(app)
 
-from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from starlette.requests import Request
-from starlette.responses import JSONResponse
-from fastapi import Request, status
+from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
+from fastapi.middleware.trustedhost import TrustedHostMiddleware  # noqa: E402
+from starlette.requests import Request  # noqa: E402
+from starlette.responses import JSONResponse  # noqa: E402
+from fastapi import Request, status  # noqa: E402, F811
 
 class MaxSizeMiddleware:
     def __init__(self, app, max_upload_size: int = 100 * 1024 * 1024): # 100MB

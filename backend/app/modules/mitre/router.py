@@ -1,4 +1,3 @@
-from typing import Any, Dict
 from fastapi import APIRouter, HTTPException
 from app.modules.mitre.service import mitre_kb
 

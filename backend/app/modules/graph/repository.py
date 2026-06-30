@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select

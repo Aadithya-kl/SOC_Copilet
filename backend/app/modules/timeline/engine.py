@@ -2,7 +2,6 @@ import uuid
 from typing import List, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
 from app.models.normalized_event import NormalizedEvent
 from app.models.correlation import CorrelationGroup

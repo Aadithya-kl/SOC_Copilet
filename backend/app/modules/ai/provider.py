@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Type, Optional, AsyncGenerator
+from typing import Dict, Type, Optional, AsyncGenerator
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 import json

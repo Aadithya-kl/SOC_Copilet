@@ -1,6 +1,5 @@
 import time
 import httpx
-from typing import Optional
 from app.modules.threat_intel.providers.base import BaseTIProvider
 from app.modules.threat_intel.schemas import TIProviderResponse
 

@@ -1,10 +1,8 @@
 import uuid
-import json
 from io import StringIO
 from fastapi import APIRouter, Depends, Query, Response
 from fastapi.responses import PlainTextResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User

@@ -24,7 +24,7 @@ jobs:
     - name: Run pip-audit
       run: |
         cd backend
-        pip install poetry
+        pip install poetry poetry-plugin-export
         poetry export -f requirements.txt --output requirements.txt --without-hashes
         pip-audit -r requirements.txt
     - name: Run bandit

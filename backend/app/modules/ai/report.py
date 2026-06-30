@@ -34,11 +34,11 @@ class ReportGenerator:
         return report_data  # type: ignore
         
     def render_markdown(self, report: TechnicalReport) -> str:
-        md = f"# Technical Incident Report\n\n"
+        md = "# Technical Incident Report\n\n"
         md += f"## Executive Summary\n{report.summary}\n\n"
         md += f"## Attack Vector & Chain\n{report.attack_vector}\n\n"
         md += f"## Impact\n{report.impact}\n\n"
-        md += f"## MITRE ATT&CK Techniques\n"
+        md += "## MITRE ATT&CK Techniques\n"
         for tech in report.mitre_techniques:
             md += f"- {tech}\n"
         md += "\n## Recommendations\n"

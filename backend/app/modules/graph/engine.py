@@ -1,12 +1,11 @@
 import uuid
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.models.normalized_event import NormalizedEvent
 from app.models.ioc import IOC
 from app.models.evidence import Evidence
-from app.models.correlation import CorrelationGroup, CorrelationEvidence
 from app.models.graph import GraphNode
 from app.modules.graph.repository import PostgresGraphAdapter
 
@@ -103,7 +102,8 @@ class RelationshipBuilder:
         edges = []
         for ev in events:
             ev_node = node_map.get(("Event", str(ev.id)))
-            if not ev_node: continue
+            if not ev_node:
+                continue
             
             if ev.source_ip and ("IP Address", ev.source_ip) in node_map:
                 edges.append({

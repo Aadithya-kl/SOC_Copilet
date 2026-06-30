@@ -1,5 +1,5 @@
 import uuid
-from typing import AsyncGenerator, Dict, Any, List
+from typing import AsyncGenerator, Dict, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 

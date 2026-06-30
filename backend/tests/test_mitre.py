@@ -1,4 +1,3 @@
-import pytest
 from datetime import datetime
 from app.modules.mitre.engine import MitreMappingEngine
 from app.models.normalized_event import NormalizedEvent
