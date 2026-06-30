@@ -1,0 +1,34 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "soc-copilot-backend",
+      "version": "0.1.0"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "fastapi",
+      "version": "0.111.0"
+    },
+    {
+      "type": "library",
+      "name": "sqlalchemy",
+      "version": "2.0.30"
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "version": "2.7.0"
+    },
+    {
+      "type": "library",
+      "name": "openai",
+      "version": "2.44.0"
+    }
+  ]
+}

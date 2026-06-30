@@ -1,0 +1,12 @@
+id: "rule_encoded_powershell"
+name: "Encoded PowerShell Execution"
+description: "Detects the execution of PowerShell with encoded command flags."
+technique_id: "T1059"
+confidence: "medium"
+conditions:
+  - field: "raw_message"
+    operator: "contains_any"
+    value: ["-enc ", "-encodedcommand ", "-e "]
+  - field: "raw_message"
+    operator: "contains"
+    value: "powershell.exe"

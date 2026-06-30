@@ -1,137 +1,127 @@
-<h1 align="center">SOC Copilot</h1>
+<div align="center">
+  <img src="assets/storyboard/storyboard_preview.png" alt="SOC Copilot Hero Image" width="800">
+  
+  <h1>SOC Copilot</h1>
+  <p><b>Next-Generation AI-Driven Security Operations Center Platform</b></p>
+  
+  <a href="#features">Features</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#documentation">Documentation</a>
+</div>
 
-<p align="center">
-  <em>AI-powered Security Operations Center assistant. Upload logs, get a full incident investigation in minutes — free, self-hosted, open source.</em>
-</p>
+<br/>
 
-<p align="center">
-  <a href="https://github.com/Aadithya-kl/SOC_Copilet/actions/workflows/ci.yml">
-    <img src="https://github.com/Aadithya-kl/SOC_Copilet/actions/workflows/ci.yml/badge.svg" alt="Build Status">
-  </a>
-  <a href="https://github.com/Aadithya-kl/SOC_Copilet/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License">
-  </a>
-</p>
+SOC Copilot is an enterprise-grade, AI-native platform designed to accelerate incident response, automate threat intelligence correlation, and provide analysts with an intuitive, visually rich environment for investigating cyber threats.
 
 ---
 
-## 📖 Project Overview
+## 🌟 Features
 
-SOC Copilot is a modular monolith backend that orchestrates a team of specialized AI agents to automate the investigation of cybersecurity incidents. It ingests logs, extracts indicators of compromise, correlates events, enriches intelligence, maps to MITRE ATT&CK, and generates explainable, professional reports. It handles the repetitive triage work, freeing analysts for strategic response.
+- **AI-Powered Investigations**: Automated log summarization, anomaly detection, and natural language querying of security events.
+- **Real-Time Correlation**: Instantly correlate Indicators of Compromise (IoCs) against global threat feeds and historical data.
+- **Immersive Visualizer**: (Upcoming) A scroll-triggered WebGL frontend that dynamically maps the attack lifecycle.
+- **MITRE ATT&CK Mapping**: Automatic alignment of detected behaviors to the MITRE framework.
+- **Air-Gap Ready**: Fully localized LLM inference via Ollama ensures sensitive data never leaves your environment.
+- **Comprehensive API**: REST and WebSocket APIs for seamless integration with existing SIEM/SOAR platforms.
 
 ## 🏗️ Architecture
 
-```mermaid
-graph TD
-    Client[Web Client] --> Nginx[Nginx Reverse Proxy]
-    
-    subgraph "SOC Copilot Backend"
-        Nginx --> API[FastAPI Application]
-        API --> Core[Core Engine]
-        API --> Agents[AI Agent Orchestrator]
-    end
-    
-    subgraph "Infrastructure"
-        Core --> DB[(PostgreSQL)]
-        Core --> Cache[(Redis)]
-        Agents --> VDB[(Qdrant Vector DB)]
-        Core --> S3[(MinIO Storage)]
-    end
-    
-    subgraph "Universal LLM Service"
-        Agents --> OmniRoute[OmniRoute Router]
-        OmniRoute --> LocalLLM[Ollama Local]
-        OmniRoute --> OpenRouter[OpenRouter Remote]
-    end
+SOC Copilot leverages a highly scalable, decoupled microservices architecture:
+
+- **API Gateway**: FastAPI (Python)
+- **Asynchronous Processing**: Celery Workers & Redis
+- **Relational Storage**: PostgreSQL
+- **Vector Search**: Qdrant (for RAG and semantic correlation)
+- **Object Storage**: MinIO (PCAPs, memory dumps)
+- **Local AI Inference**: Ollama
+- **Observability**: Prometheus & Grafana
+
+*For a deep dive into system diagrams and data flows, see the [Architecture Documentation](docs/architecture/ARCHITECTURE.md).*
+
+## 💻 Tech Stack
+
+- **Backend**: Python 3.12, FastAPI, SQLAlchemy, Celery, Pydantic
+- **Frontend** *(In Development)*: Next.js, React, TailwindCSS, Three.js/WebGL
+- **Infrastructure**: Docker, Docker Compose, Nginx
+- **Databases**: PostgreSQL, Redis, Qdrant, MinIO
+
+## 🚀 Installation
+
+### Prerequisites
+- Docker (v24+)
+- Docker Compose (v2+)
+- Git
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Aadithya-kl/SOC_Copilet.git
+cd SOC_Copilet
 ```
 
-## 🛠️ Technology Stack
-
-- **Backend:** Python 3.12, FastAPI, SQLAlchemy, Pydantic
-- **AI/LLM:** LangGraph, OmniRoute, Qdrant (Vector DB)
-- **Infrastructure:** PostgreSQL, Redis, MinIO (S3-compatible)
-- **DevOps:** Docker, Docker Compose, GitHub Actions, Poetry
-
-## ✨ Features
-
-- 🚀 **Multi-format log file parsing** (EVTX, syslog, etc.)
-- 🤖 **Hybrid AI Pipeline** with specialized LangGraph agents
-- 🔍 **Automatic IOC Extraction & Threat Intelligence Enrichment**
-- 🔗 **Event Correlation & Timeline Reconstruction**
-- 📚 **MITRE ATT&CK Mapping & Risk Scoring**
-- 💬 **Retrieval-Augmented Generation (RAG)** for conversational incident queries
-- 🔒 **Enterprise-Grade Security:** Strict RBAC, secure default configurations, self-hosted capability.
-
-## ⚡ Quick Start (under 5 minutes)
-
-SOC Copilot is designed to be easily deployable on any machine with Docker installed.
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Aadithya-kl/SOC_Copilet.git
-   cd SOC_Copilet
-   ```
-
-2. **Configure environment:**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add any necessary API keys (like OpenRouter) if you aren't running local models.
-   ```
-
-3. **Start the platform:**
-   ```bash
-   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
-   ```
-
-4. **Access the application:**
-   - API Documentation: http://localhost:8000/api/v1/docs
-
-## 🗂️ Repository Structure
-
-```text
-backend/
-├── app/
-│   ├── agents/          # LangGraph AI pipelines and orchestrators
-│   ├── core/            # Configuration, logging, exception handling
-│   ├── database/        # Database session management
-│   ├── llm/             # Universal LLM Service (OmniRoute, OpenRouter, etc.)
-│   ├── models/          # SQLAlchemy ORM models
-│   ├── modules/         # Feature modules (Auth, Incidents, Uploads, etc.)
-│   └── shared/          # Shared DTOs and utilities
-├── infrastructure/      # Database migrations (Alembic)
-├── tests/               # Unit and integration tests
-└── main.py              # FastAPI application factory
-docs/                    # Project documentation (Architecture, API, etc.)
+### 2. Environment Variables
+Copy the example environment file and configure it according to your setup:
+```bash
+cp .env.example .env
 ```
+Key variables to configure:
+- `POSTGRES_USER` / `POSTGRES_PASSWORD`
+- `REDIS_URL`
+- `OLLAMA_BASE_URL`
+- `JWT_SECRET`
+
+### 3. Docker Setup
+Launch the entire stack using Docker Compose:
+```bash
+docker compose up --build -d
+```
+
+Verify that all services are healthy:
+```bash
+docker compose ps
+```
+
+## 🧩 Backend Modules
+
+The backend is modularized to handle specific domains of the incident response lifecycle:
+- **Authentication Module**: JWT-based RBAC.
+- **Investigation Pipeline**: Automates data gathering and AI synthesis for new incidents.
+- **Evidence Management**: Secure handling of PCAPs, logs, and artifacts via MinIO.
+- **Threat Intel Engine**: Asynchronous IoC lookups and caching.
+
+## 🧠 AI Pipeline
+
+SOC Copilot implements an advanced Retrieval-Augmented Generation (RAG) pipeline:
+1. Evidence and logs are embedded and stored in **Qdrant**.
+2. Analyst queries trigger semantic searches against the vector store.
+3. Contextualized prompts are sent to **Ollama** (e.g., running Llama 3).
+4. The AI generates actionable summaries, MITRE mappings, and remediation steps securely.
 
 ## 📸 Screenshots
 
-*(Screenshots of the UI, investigation timelines, and generated reports will be added in upcoming phases.)*
+*(UI currently in development. Placeholders below.)*
 
-## 📚 Documentation
+| Dashboard | Investigation Graph | AI Chat |
+|:---:|:---:|:---:|
+| ![Dashboard Placeholder](https://via.placeholder.com/400x225?text=Dashboard) | ![Graph Placeholder](https://via.placeholder.com/400x225?text=Investigation+Graph) | ![Chat Placeholder](https://via.placeholder.com/400x225?text=AI+Chat) |
 
-Detailed documentation is available in the `docs/` directory:
-- [System Architecture](docs/architecture/system_architecture.md)
-- [Backend Architecture](docs/architecture/backend_architecture.md)
-- [AI Agent Architecture](docs/architecture/ai_agent_architecture.md)
-- [Database ER Diagram](docs/architecture/database_er.md)
+## 🎨 Frontend Status
 
-## 🗺️ Roadmap
+**Status: Pending Integration (RC1)**
+The backend API is completely finalized and production-ready. 
+The `frontend/` directory has been structurally prepared. The interactive, WebGL-driven UI will be built in the next phase. Storyboard assets guiding the frontend development are available in `assets/storyboard/`.
 
-- **Phase 0:** Initialization & Core Infrastructure (Current)
-- **Phase 1:** Authentication & Incident Management
-- **Phase 2:** Log Ingestion & Parsing
-- **Phase 3:** Automated IOC Extraction & Enrichment
-- **Phase 4:** Event Correlation & MITRE ATT&CK Mapping
-- **Phase 5:** Autonomous Investigation & Reporting
-- **Phase 6:** Conversational Assistant (RAG)
-- **Phase 7:** UI / Frontend Integration
-- **Phase 8:** Polish, Performance, & Launch
+## 🚢 Deployment
 
-## 🤝 Contributing
+For production deployment, we recommend deploying to a Kubernetes cluster using our provided Helm charts (coming soon). Ensure that the Ollama node is provisioned with adequate GPU resources (NVIDIA RTX 3090 / A10G or better) for optimal AI performance.
 
-We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) to learn how to get started, and our [Code of Conduct](CODE_OF_CONDUCT.md) for community guidelines.
+## 📜 License
 
-## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
+## 🤝 Contribution
+
+We welcome contributions! Please review our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a Pull Request.
+
+---
+*Built for the modern SOC analyst.*

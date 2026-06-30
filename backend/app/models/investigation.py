@@ -25,6 +25,9 @@ class InvestigationState(Base):
     metadata_json: Mapped[dict | None] = mapped_column(JSON, nullable=True) # E.g., parse speed, memory usage
     error_message: Mapped[str | None] = mapped_column(String, nullable=True)
     
+    # Summary JSON populated after deterministic correlation phase
+    investigation_summary: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

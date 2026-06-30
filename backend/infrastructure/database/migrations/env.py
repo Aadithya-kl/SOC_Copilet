@@ -17,6 +17,11 @@ from app.models.audit_log import AuditLog  # noqa: F401
 from app.models.investigation import InvestigationState  # noqa: F401
 from app.models.normalized_event import NormalizedEvent  # noqa: F401
 from app.models.ioc import IOC  # noqa: F401
+from app.models.threat_intel import ThreatIntelligence  # noqa: F401
+from app.models.evidence import Evidence, EvidenceTIReference  # noqa: F401
+from app.models.correlation import CorrelationGroup, CorrelationEvidence  # noqa: F401
+from app.models.graph import GraphNode, GraphEdge  # noqa: F401
+from app.models.chat import InvestigationChat  # noqa: F401
 
 from app.core.config import settings
 

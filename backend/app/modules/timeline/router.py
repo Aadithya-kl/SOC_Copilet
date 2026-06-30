@@ -1,0 +1,20 @@
+import uuid
+from typing import List, Dict, Any
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from app.infrastructure.database.session import get_db
+from app.modules.auth.dependencies import get_current_user
+from app.models.user import User
+from app.modules.timeline.engine import TimelineEngine
+
+router = APIRouter(prefix="/timeline", tags=["Timeline"])
+
+@router.get("/")
+async def get_timeline(
+    investigation_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    engine = TimelineEngine(db)
+    return await engine.build_timeline(investigation_id)

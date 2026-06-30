@@ -28,6 +28,18 @@ python-multipart = "^0.0.9"
 arq = "^0.28.0"
 evtx = "^0.12.1"
 websockets = "^16.0"
+tenacity = "^9.1.4"
+pyyaml = "^6.0.3"
+cachetools = "^7.1.4"
+openai = "^2.44.0"
+jinja2 = "^3.1.6"
+prometheus-fastapi-instrumentator = "<8.0.0"
+opentelemetry-api = "^1.43.0"
+opentelemetry-sdk = "^1.43.0"
+opentelemetry-instrumentation-fastapi = "^0.64b0"
+opentelemetry-instrumentation-sqlalchemy = "^0.64b0"
+opentelemetry-instrumentation-redis = "^0.64b0"
+opentelemetry-instrumentation-httpx = "^0.64b0"
 
 [tool.mypy]
 explicit_package_bases = true
@@ -44,6 +56,7 @@ pytest-cov = "^5.0.0"
 ruff = "^0.4.0"
 mypy = "^1.9.0"
 import-linter = "^2.0"
+respx = "^0.23.1"
 
 [tool.importlinter]
 root_package = "app"

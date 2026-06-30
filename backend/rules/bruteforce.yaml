@@ -1,0 +1,12 @@
+id: "rule_bruteforce_auth"
+name: "Brute Force Authentication"
+description: "Detects multiple failed login attempts indicative of brute force activity."
+technique_id: "T1110"
+confidence: "high"
+conditions:
+  - field: "event_action"
+    operator: "equals"
+    value: "login_failed"
+  - field: "event_provider" # Example condition
+    operator: "in"
+    value: ["auth", "sshd", "su", "sudo"]

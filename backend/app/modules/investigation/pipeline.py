@@ -16,6 +16,13 @@ from app.models.ioc import IOC
 from app.models.incident import Incident
 from app.modules.investigation.parsers.registry import parser_registry
 from app.modules.investigation.ioc.engine import ioc_engine
+from app.modules.threat_intel.aggregator import TIAggregator
+from app.modules.mitre.engine import mapping_engine
+from app.models.threat_intel import ThreatIntelligence
+from app.models.evidence import Evidence, EvidenceTIReference
+from app.modules.correlation.engine import CorrelationEngine
+from app.modules.graph.engine import RelationshipBuilder
+from app.modules.timeline.engine import TimelineEngine
 
 class InvestigationPipeline:
     def __init__(self, session: AsyncSession, redis_client: redis.Redis):
@@ -137,6 +144,18 @@ class InvestigationPipeline:
                 # Flush remainder
                 if event_batch:
                     await self._flush_batches(event_batch, ioc_batch)
+                    
+                # Phase 3.5: Correlation & Graph
+                await self._publish_progress(investigation_id, "correlating", 80, events_processed, iocs_extracted, "running")
+                correlation_engine = CorrelationEngine(self.session)
+                await correlation_engine.run_correlation(investigation.organization_id, investigation_id)
+                
+                await self._publish_progress(investigation_id, "building_graph", 90, events_processed, iocs_extracted, "running")
+                graph_builder = RelationshipBuilder(self.session)
+                await graph_builder.build_projection(investigation_id)
+                
+                timeline_engine = TimelineEngine(self.session)
+                await timeline_engine.generate_summary(investigation_id)
                 
                 # Update status
                 investigation.status = "completed"
@@ -171,19 +190,105 @@ class InvestigationPipeline:
             await self._publish_progress(investigation_id, "failed", 0, 0, 0, "failed")
 
     async def _flush_batches(self, event_batch, ioc_batch):
+        from sqlalchemy.dialects.postgresql import insert as pg_insert
+        import asyncio
+        import uuid
+        
+        # We need aggregator in scope. Let's create it.
+        aggregator = TIAggregator(self.redis_client)
+        evidence_batch = []
+        ti_batch = []
+        ti_ref_batch = []
+        
+        # We need event objects to evaluate rules. We'll reconstruct them from dicts.
         if event_batch:
-            from sqlalchemy.dialects.postgresql import insert as pg_insert
-            
             stmt = pg_insert(NormalizedEvent).values(event_batch).on_conflict_do_nothing()
             await self.session.execute(stmt)
             
-        if ioc_batch:
-            from sqlalchemy.dialects.postgresql import insert as pg_insert
+            for event_dict in event_batch:
+                # Rule matching
+                event_obj = NormalizedEvent(**event_dict)
+                matches = mapping_engine.evaluate_event(event_obj)
+                for match in matches:
+                    evidence_batch.append({
+                        "id": uuid.uuid4(),
+                        "organization_id": event_dict["organization_id"],
+                        "incident_id": event_dict["incident_id"],
+                        "investigation_id": event_dict["investigation_id"],
+                        "source_event_id": event_dict["id"],
+                        "ioc_id": None,
+                        "mitre_technique_id": match["technique_id"],
+                        "confidence": match["confidence"],
+                        "description": match["description"]
+                    })
             
+        if ioc_batch:
             stmt = pg_insert(IOC).values(ioc_batch)
             stmt = stmt.on_conflict_do_nothing(
                 index_elements=['investigation_id', 'ioc_type', 'value']
             )
+            await self.session.execute(stmt)
+            
+            # Enrich IOCs concurrently
+            enrich_tasks = []
+            for ioc_dict in ioc_batch:
+                enrich_tasks.append(aggregator.enrich_ioc(ioc_dict["ioc_type"], ioc_dict["value"]))
+                
+            enrich_results = await asyncio.gather(*enrich_tasks, return_exceptions=True)
+            
+            for ioc_dict, enrich_res in zip(ioc_batch, enrich_results):
+                if isinstance(enrich_res, list) and enrich_res:
+                    # Create evidence for IOC if there is threat intel
+                    high_conf = any(r.confidence > 0.8 for r in enrich_res)
+                    med_conf = any(r.confidence > 0.4 for r in enrich_res)
+                    
+                    if high_conf or med_conf:
+                        evidence_id = uuid.uuid4()
+                        evidence_batch.append({
+                            "id": evidence_id,
+                            "organization_id": ioc_dict["organization_id"],
+                            "incident_id": ioc_dict["incident_id"],
+                            "investigation_id": ioc_dict["investigation_id"],
+                            "source_event_id": ioc_dict.get("source_event_id"),
+                            "ioc_id": ioc_dict["id"],
+                            "mitre_technique_id": None,
+                            "confidence": "high" if high_conf else "medium",
+                            "description": f"Threat Intelligence found for IOC {ioc_dict['value']}"
+                        })
+                        
+                        # Store TI results
+                        for r in enrich_res:
+                            ti_id = uuid.uuid4()
+                            ti_batch.append({
+                                "id": ti_id,
+                                "ioc_id": ioc_dict["id"],
+                                "provider_name": r.provider_name,
+                                "provider_version": r.provider_version,
+                                "confidence_score": r.confidence,
+                                "weighted_confidence": r.weighted_confidence,
+                                "raw_response": r.raw_response,
+                                "normalized_response": r.normalized_response,
+                                "response_time_ms": r.response_time_ms,
+                                "rate_limit_remaining": r.rate_limit_remaining,
+                                "cache_hit": r.cache_hit,
+                                "error_reason": r.error_reason
+                            })
+                            ti_ref_batch.append({
+                                "id": uuid.uuid4(),
+                                "evidence_id": evidence_id,
+                                "threat_intel_id": ti_id
+                            })
+
+        if ti_batch:
+            stmt = pg_insert(ThreatIntelligence).values(ti_batch).on_conflict_do_nothing()
+            await self.session.execute(stmt)
+
+        if evidence_batch:
+            stmt = pg_insert(Evidence).values(evidence_batch).on_conflict_do_nothing()
+            await self.session.execute(stmt)
+            
+        if ti_ref_batch:
+            stmt = pg_insert(EvidenceTIReference).values(ti_ref_batch).on_conflict_do_nothing()
             await self.session.execute(stmt)
             
         await self.session.commit()
