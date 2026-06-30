@@ -18,7 +18,7 @@ class VirusTotalProvider(BaseTIProvider):
         headers = {"x-apikey": self.api_key}
         
         try:
-            resp = await self._http_get(url, headers)
+            resp = await self._http_get(url, headers)  # type: ignore
             data = resp.json()
             stats = data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
             malicious = stats.get("malicious", 0)
@@ -48,7 +48,7 @@ class VirusTotalProvider(BaseTIProvider):
         headers = {"x-apikey": self.api_key}
         
         try:
-            resp = await self._http_get(url, headers)
+            resp = await self._http_get(url, headers)  # type: ignore
             data = resp.json()
             stats = data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
             malicious = stats.get("malicious", 0)
@@ -78,7 +78,7 @@ class VirusTotalProvider(BaseTIProvider):
         headers = {"x-apikey": self.api_key}
         
         try:
-            resp = await self._http_get(url, headers)
+            resp = await self._http_get(url, headers)  # type: ignore
             data = resp.json()
             stats = data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
             malicious = stats.get("malicious", 0)

@@ -22,7 +22,7 @@ class TIAggregator:
     def __init__(self, redis_client: redis.Redis):
         self.redis = redis_client
         # Memory cache: max 1000 items, 5 minutes TTL
-        self.mem_cache = TTLCache(maxsize=1000, ttl=300)
+        self.mem_cache = TTLCache(maxsize=1000, ttl=300)  # type: ignore
         
         self.providers = [
             VirusTotalProvider(api_key=settings.VIRUSTOTAL_API_KEY if hasattr(settings, 'VIRUSTOTAL_API_KEY') else None),
@@ -69,10 +69,10 @@ class TIAggregator:
                 async with asyncio.timeout(15.0):
                     return await func(value)
             except asyncio.TimeoutError:
-                return provider._build_error_response(time.time(), "TIMEOUT")
+                return provider._build_error_response(time.time(), "TIMEOUT")  # type: ignore
             except Exception as e:
                 logger.error(f"Provider {provider.provider_name} failed: {e}")
-                return provider._build_error_response(time.time(), str(e))
+                return provider._build_error_response(time.time(), str(e))  # type: ignore
 
     async def enrich_ioc(self, ioc_type: str, ioc_value: str) -> List[TIProviderResponse]:
         cache_key = f"ti:{ioc_type}:{ioc_value}"

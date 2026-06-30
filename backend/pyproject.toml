@@ -7,7 +7,11 @@ name = "soc-copilot-backend"
 version = "0.1.0"
 description = "SOC Copilot Backend"
 authors = ["SOC Copilot Team"]
-
+packages = [
+    { include = "app" },
+    { include = "infrastructure" },
+    { include = "scripts" }
+]
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.111.0"
@@ -44,6 +48,15 @@ opentelemetry-instrumentation-httpx = "^0.64b0"
 [tool.mypy]
 explicit_package_bases = true
 mypy_path = "."
+
+[[tool.mypy.overrides]]
+module = [
+    "passlib.*",
+    "locust.*",
+    "yaml.*",
+]
+ignore_missing_imports = true
+
 
 [tool.pytest.ini_options]
 pythonpath = "."

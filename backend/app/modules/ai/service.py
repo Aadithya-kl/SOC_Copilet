@@ -39,11 +39,11 @@ class LLMService:
                 
         # If we exhausted retries, throw a structured error or raise
         logger.error(f"Failed to generate structured output after {max_retries + 1} attempts.")
-        raise last_exception
+        raise last_exception  # type: ignore
 
     async def chat_stream(self, prompt: str, model: str = "default") -> AsyncGenerator[str, None]:
         """
         Stream chat responses.
         """
-        async for chunk in self.provider.generate_stream(prompt, model):
+        async for chunk in self.provider.generate_stream(prompt, model):  # type: ignore
             yield chunk

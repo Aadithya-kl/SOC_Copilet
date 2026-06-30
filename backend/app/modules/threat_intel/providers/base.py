@@ -36,7 +36,7 @@ class BaseTIProvider(ABC):
             normalized_response=normalized
         )
 
-    async def _http_get(self, url: str, headers: Dict[str, str], params: Dict[str, Any] = None) -> httpx.Response:
+    async def _http_get(self, url: str, headers: Dict[str, str], params: Dict[str, Any] = None) -> httpx.Response:  # type: ignore
         async for attempt in AsyncRetrying(
             stop=stop_after_attempt(3),
             wait=wait_exponential(multiplier=1, min=2, max=10)

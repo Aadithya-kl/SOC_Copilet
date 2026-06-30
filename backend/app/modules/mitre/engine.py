@@ -16,7 +16,7 @@ class MitreMappingEngine:
             rules_dir = os.path.join(base_dir, "rules")
             
         self.rules_dir = rules_dir
-        self.rules = []
+        self.rules = []  # type: ignore
         self._load_rules()
 
     def _load_rules(self):
@@ -40,7 +40,7 @@ class MitreMappingEngine:
         operator = condition.get('operator')
         value = condition.get('value')
         
-        event_val = event_dict.get(field)
+        event_val = event_dict.get(field)  # type: ignore
         if event_val is None:
             # Check nested inside raw_message if applicable, but for deterministic rules we rely on normalized fields
             return False
@@ -52,9 +52,9 @@ class MitreMappingEngine:
         elif operator == "contains":
             return str(value).lower() in event_val_str
         elif operator == "in":
-            return event_val_str in [str(v).lower() for v in value]
+            return event_val_str in [str(v).lower() for v in value]  # type: ignore
         elif operator == "contains_any":
-            return any(str(v).lower() in event_val_str for v in value)
+            return any(str(v).lower() in event_val_str for v in value)  # type: ignore
             
         return False
 

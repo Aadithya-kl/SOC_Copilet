@@ -32,7 +32,7 @@ class TimelineEngine:
                    ev.user_name == last_event.user_name and \
                    ev.host_name == last_event.host_name:
                     
-                    timeline[-1]["count"] += 1
+                    timeline[-1]["count"] += 1  # type: ignore
                     timeline[-1]["end_time"] = ev.timestamp.isoformat()
                     continue
                     

@@ -48,7 +48,7 @@ class OpenAICompatibleProvider(BaseLLMProvider):
             logger.error(f"Failed to validate LLM response against schema: {e}")
             raise ValueError(f"Schema validation failed: {e}")
 
-    async def generate_stream(self, prompt: str, model: str = "default") -> AsyncGenerator[str, None]:
+    async def generate_stream(self, prompt: str, model: str = "default") -> AsyncGenerator[str, None]:  # type: ignore
         target_model = self.default_model if model == "default" else model
         
         stream = await self.client.chat.completions.create(

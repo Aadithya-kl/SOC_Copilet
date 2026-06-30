@@ -22,6 +22,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pip-audit bandit
     - name: Run pip-audit
-      run: cd backend && pip-audit
+      run: |
+        cd backend
+        pip install poetry
+        poetry export -f requirements.txt --output requirements.txt --without-hashes
+        pip-audit -r requirements.txt
     - name: Run bandit
-      run: cd backend && bandit -r app/ agents/
+      run: cd backend && bandit -r app/

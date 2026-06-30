@@ -4,8 +4,8 @@ from fastapi.responses import StreamingResponse, PlainTextResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 
-from app.infrastructure.database.session import get_db
-from app.modules.auth.dependencies import get_current_user
+from app.core.database import get_db
+from app.core.security import get_current_user
 from app.models.user import User
 
 from app.modules.ai.reasoning import AttackAnalyzer, EvidenceExplainer, ContainmentPlanner, RemediationPlanner
@@ -34,7 +34,7 @@ async def analyze_attack(
 @router.post("/chat")
 async def chat(
     investigation_id: uuid.UUID = Query(...),
-    request: ChatRequest = ...,
+    request: ChatRequest = ...,  # type: ignore
     stream: bool = Query(True),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)

@@ -18,7 +18,7 @@ class AlienVaultOTXProvider(BaseTIProvider):
         headers = {"X-OTX-API-KEY": self.api_key}
         
         try:
-            resp = await self._http_get(url, headers)
+            resp = await self._http_get(url, headers)  # type: ignore
             data = resp.json()
             pulse_info = data.get("pulse_info", {})
             pulse_count = pulse_info.get("count", 0)

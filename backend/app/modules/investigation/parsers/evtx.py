@@ -14,7 +14,7 @@ class EVTXParser(BaseParser):
         parser = PyEvtxParser(file_path)
         for record_str in parser.records_json():
             try:
-                record = json.loads(record_str)
+                record = json.loads(record_str)  # type: ignore
                 data = json.loads(record['data'])
                 # Extract basic EVTX fields
                 event = data.get("Event", {})

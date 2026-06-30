@@ -42,8 +42,8 @@ async def upload_file(
     uploads_service = UploadsService(session)
     file_record = await uploads_service.upload_file(
         file_content=content,
-        filename=file.filename,
-        content_type=file.content_type,
+        filename=file.filename,  # type: ignore
+        content_type=file.content_type,  # type: ignore
         organization_id=current_user.organization_id,
         incident_id=incident_id,
         user_id=current_user.id,

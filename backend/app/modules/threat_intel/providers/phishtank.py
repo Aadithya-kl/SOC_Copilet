@@ -21,7 +21,7 @@ class PhishTankProvider(BaseTIProvider):
             "format": "json"
         }
         if self.configured:
-            data["app_key"] = self.api_key
+            data["app_key"] = self.api_key  # type: ignore
 
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:

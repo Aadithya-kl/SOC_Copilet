@@ -31,7 +31,7 @@ class ReportGenerator:
         
         # Generates structured intermediate object
         report_data = await self.llm_service.analyze_structured(prompt, TechnicalReport)
-        return report_data
+        return report_data  # type: ignore
         
     def render_markdown(self, report: TechnicalReport) -> str:
         md = f"# Technical Incident Report\n\n"

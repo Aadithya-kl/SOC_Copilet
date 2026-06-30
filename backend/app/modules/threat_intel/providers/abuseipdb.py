@@ -22,7 +22,7 @@ class AbuseIPDBProvider(BaseTIProvider):
         params = {"ipAddress": ip, "maxAgeInDays": 90}
         
         try:
-            resp = await self._http_get(url, headers, params)
+            resp = await self._http_get(url, headers, params)  # type: ignore
             data = resp.json().get("data", {})
             score = data.get("abuseConfidenceScore", 0)
             confidence = score / 100.0

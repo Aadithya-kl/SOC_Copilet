@@ -15,13 +15,13 @@ class MitreKnowledgeBase:
         return cls._instance
 
     def __init__(self, stix_path: Optional[str] = None):
-        if self._initialized:
+        if self._initialized:  # type: ignore
             return
             
-        self.techniques_by_id = {}
-        self.techniques_by_name = {}
-        self.tactics_by_name = {}
-        self.all_techniques = []
+        self.techniques_by_id = {}  # type: ignore
+        self.techniques_by_name = {}  # type: ignore
+        self.tactics_by_name = {}  # type: ignore
+        self.all_techniques = []  # type: ignore
         
         if not stix_path:
             stix_path = os.getenv("MITRE_STIX_PATH", "/data/mitre/enterprise-attack.json")

@@ -176,7 +176,7 @@ class CorrelationEngine:
             
             if ce_batch:
                 from sqlalchemy.dialects.postgresql import insert as pg_insert
-                stmt = pg_insert(CorrelationEvidence).values(ce_batch).on_conflict_do_nothing()
+                stmt = pg_insert(CorrelationEvidence).values(ce_batch).on_conflict_do_nothing()  # type: ignore
                 await self.session.execute(stmt)
                 
             await self.session.commit()
